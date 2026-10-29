@@ -1,0 +1,346 @@
+@page "/"
+@rendermode InteractiveWebAssembly
+
+<PageTitle>EaseEvent — Your events, effortlessly</PageTitle>
+
+<div class="dashboard" id="dashboard">
+    <section class="page-heading">
+        <div>
+            <p class="eyebrow">@DateTime.Now.ToString("dddd, MMMM d, yyyy")</p>
+            <h1>Good morning, Jordan <span aria-hidden="true">✦</span></h1>
+            <p class="page-subtitle">A little planning goes a long way. Here's what's happening.</p>
+        </div>
+        <button class="primary-button" @onclick="OpenCreateModal">
+            <span aria-hidden="true">＋</span> Create an event
+        </button>
+    </section>
+
+    <section class="welcome-banner" aria-label="Planning overview">
+        <div class="welcome-banner__content">
+            <span class="banner-kicker"><span class="banner-kicker__dot"></span> YOUR EVENT PLANNER</span>
+            <h2>Make room for<br />the moments that matter.</h2>
+            <p>Every great gathering starts with a simple plan. You're right where you need to be.</p>
+            <a href="#events" class="banner-link">See your upcoming events <span aria-hidden="true">→</span></a>
+        </div>
+        <div class="banner-art" aria-hidden="true">
+            <div class="banner-art__sun"></div>
+            <div class="banner-art__ring banner-art__ring--one"></div>
+            <div class="banner-art__ring banner-art__ring--two"></div>
+            <div class="banner-art__flower">✿</div>
+            <div class="banner-art__sparkle banner-art__sparkle--one">✦</div>
+            <div class="banner-art__sparkle banner-art__sparkle--two">✧</div>
+            <div class="banner-art__sparkle banner-art__sparkle--three">·</div>
+        </div>
+        <span class="welcome-banner__note" aria-hidden="true">made with care</span>
+    </section>
+
+    <section class="stats-grid" aria-label="Event statistics">
+        <article class="stat-card">
+            <div class="stat-card__top">
+                <span class="stat-card__label">Upcoming events</span>
+                <span class="stat-icon stat-icon--lavender" aria-hidden="true">▦</span>
+            </div>
+            <strong class="stat-card__value">@UpcomingCount</strong>
+            <span class="stat-card__note"><span class="stat-card__positive">Looking good</span> on your calendar</span>
+        </article>
+        <article class="stat-card">
+            <div class="stat-card__top">
+                <span class="stat-card__label">Guests invited</span>
+                <span class="stat-icon stat-icon--peach" aria-hidden="true">♧</span>
+            </div>
+            <strong class="stat-card__value">@GuestCount</strong>
+            <span class="stat-card__note">Across your upcoming events</span>
+        </article>
+        <article class="stat-card">
+            <div class="stat-card__top">
+                <span class="stat-card__label">Next celebration</span>
+                <span class="stat-icon stat-icon--mint" aria-hidden="true">♡</span>
+            </div>
+            <strong class="stat-card__value stat-card__value--date">@NextEventLabel</strong>
+            <span class="stat-card__note">@NextEventName</span>
+        </article>
+    </section>
+
+    <section class="events-section" id="events">
+        <div class="section-heading">
+            <div>
+                <p class="eyebrow">KEEP THE GOOD THINGS CLOSE</p>
+                <h2>Your events</h2>
+            </div>
+            <button class="text-button" @onclick="OpenCreateModal">＋ Add event</button>
+        </div>
+
+        <div class="event-toolbar">
+            <div class="filter-tabs" role="group" aria-label="Filter events">
+                @foreach (var filter in EventFilters)
+                {
+                    <button class="filter-tab @(selectedFilter == filter ? "filter-tab--active" : "")"
+                            aria-pressed="@(selectedFilter == filter)"
+                            @onclick="() => selectedFilter = filter">
+                        @filter
+                    </button>
+                }
+            </div>
+            <label class="search-box">
+                <span aria-hidden="true">⌕</span>
+                <input type="search" placeholder="Find an event..." aria-label="Search events" @bind="searchTerm" />
+            </label>
+        </div>
+
+        @if (VisibleEvents.Any())
+        {
+            <div class="event-list">
+                @foreach (var item in VisibleEvents)
+                {
+                    <article class="event-row">
+                        <div class="event-date">
+                            <span class="event-date__month">@item.Date.ToString("MMM")</span>
+                            <span class="event-date__day">@item.Date.Day.ToString("00")</span>
+                        </div>
+                        <div class="event-row__details">
+                            <h3>@item.Title</h3>
+                            <span class="event-row__meta">@item.Date.ToString("dddd, h:mm tt") <span aria-hidden="true">·</span> @item.Location</span>
+                        </div>
+                        <span class="event-type @GetTypeClass(item.Type)">@item.Type</span>
+                        <div class="guest-count">
+                            <span class="guest-count__icon" aria-hidden="true">♧</span>
+                            <span>@item.Guests <span class="guest-count__label">guests</span></span>
+                        </div>
+                        <span class="event-status @(item.Date.Date < DateTime.Today ? "event-status--past" : "")">
+                            <span></span>@(item.Date.Date < DateTime.Today ? "Completed" : "Planning")
+                        </span>
+                        <button class="more-button" aria-label="@($"More options for {item.Title}")">···</button>
+                    </article>
+                }
+            </div>
+        }
+        else
+        {
+            <div class="empty-state">
+                <span aria-hidden="true">✧</span>
+                <h3>No events found</h3>
+                <p>Try another search or add a new event to your calendar.</p>
+                <button class="text-button" @onclick="OpenCreateModal">Create your first event →</button>
+            </div>
+        }
+    </section>
+
+    <div class="lower-grid">
+        <section class="calendar-card" id="calendar">
+            <div class="section-heading section-heading--compact">
+                <div>
+                    <p class="eyebrow">A LITTLE LOOK AHEAD</p>
+                    <h2>This week</h2>
+                </div>
+                <span class="week-label">@WeekRange</span>
+            </div>
+            <div class="week-strip" aria-label="This week's events">
+                @foreach (var day in WeekDays)
+                {
+                    <div class="week-day @(day.Date == DateTime.Today ? "week-day--today" : "")">
+                        <span class="week-day__name">@day.Date.ToString("ddd")</span>
+                        <span class="week-day__number">@day.Date.Day</span>
+                        @if (day.HasEvent)
+                        {
+                            <span class="week-day__dot" aria-label="Event scheduled"></span>
+                        }
+                    </div>
+                }
+            </div>
+            <div class="calendar-note">
+                <span class="calendar-note__icon" aria-hidden="true">✦</span>
+                <span><strong>@ThisWeekCount event@(ThisWeekCount == 1 ? "" : "s")</strong> on your calendar this week</span>
+            </div>
+        </section>
+
+        <section class="guests-card" id="guests">
+            <div class="section-heading section-heading--compact">
+                <div>
+                    <p class="eyebrow">THE PEOPLE WHO MAKE IT SPECIAL</p>
+                    <h2>Guest list</h2>
+                </div>
+                <span class="guest-total">@GuestCount total</span>
+            </div>
+            <div class="guest-summary">
+                <div class="avatar-stack" aria-hidden="true">
+                    <span class="guest-avatar guest-avatar--rose">AM</span>
+                    <span class="guest-avatar guest-avatar--blue">KL</span>
+                    <span class="guest-avatar guest-avatar--gold">SR</span>
+                    <span class="guest-avatar guest-avatar--green">+</span>
+                </div>
+                <div>
+                    <strong>Your people, all in one place</strong>
+                    <p>Guest details are ready when you are.</p>
+                </div>
+            </div>
+            <a href="#events" class="subtle-link">Manage your guest lists <span aria-hidden="true">→</span></a>
+        </section>
+    </div>
+
+    <section class="inspiration-strip" id="inspiration">
+        <span class="inspiration-strip__icon" aria-hidden="true">✧</span>
+        <div>
+            <strong>A thoughtful touch goes a long way.</strong>
+            <span>Explore simple ideas to make your next gathering feel like you.</span>
+        </div>
+        <a href="mailto:hello@easeevent.app?subject=Event%20inspiration">Get inspired <span aria-hidden="true">→</span></a>
+    </section>
+
+    <footer class="dashboard-footer">
+        <span>Made for moments that matter <span aria-hidden="true">♡</span></span>
+        <span>EaseEvent · Your plans, in good hands.</span>
+    </footer>
+</div>
+
+@if (showCreateModal)
+{
+    <div class="modal-backdrop" @onclick="CloseCreateModal">
+        <section class="create-modal" role="dialog" aria-modal="true" aria-labelledby="create-event-title" @onclick:stopPropagation="true">
+            <div class="create-modal__heading">
+                <div>
+                    <p class="eyebrow">START WITH A DATE</p>
+                    <h2 id="create-event-title">Create an event</h2>
+                    <p>Make a little space for something wonderful.</p>
+                </div>
+                <button class="modal-close" aria-label="Close" @onclick="CloseCreateModal">×</button>
+            </div>
+            <form class="event-form" @onsubmit="CreateEvent" @onsubmit:preventDefault>
+                <label>
+                    Event name
+                    <input @bind="draftTitle" required maxlength="80" placeholder="e.g. Summer garden party" />
+                </label>
+                <div class="form-row">
+                    <label>
+                        Date
+                        <input type="date" @bind="draftDate" required />
+                    </label>
+                    <label>
+                        Event type
+                        <select @bind="draftType">
+                            @foreach (var type in EventTypes)
+                            {
+                                <option value="@type">@type</option>
+                            }
+                        </select>
+                    </label>
+                </div>
+                <div class="form-row">
+                    <label>
+                        Location
+                        <input @bind="draftLocation" required maxlength="100" placeholder="Where will it happen?" />
+                    </label>
+                    <label>
+                        Guests
+                        <input type="number" @bind="draftGuests" min="1" max="5000" required />
+                    </label>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="secondary-button" @onclick="CloseCreateModal">Cancel</button>
+                    <button type="submit" class="primary-button">Create event <span aria-hidden="true">→</span></button>
+                </div>
+            </form>
+        </section>
+    </div>
+}
+
+@if (!string.IsNullOrEmpty(toastMessage))
+{
+    <div class="toast-message" role="status">
+        <span aria-hidden="true">✓</span> @toastMessage
+        <button aria-label="Dismiss notification" @onclick="() => toastMessage = null">×</button>
+    </div>
+}
+
+@code {
+    private readonly List<EventItem> events =
+    [
+        new("Maya & Alex's Wedding", DateTime.Today.AddDays(8).AddHours(16), "Wedding", "Willow Creek Gardens", 86),
+        new("Sunday Brunch Club", DateTime.Today.AddDays(2).AddHours(11), "Gathering", "The Greenhouse Café", 14),
+        new("Jordan's 30th Birthday", DateTime.Today.AddDays(15).AddHours(19), "Birthday", "Rooftop at Juniper", 42),
+        new("Studio Spring Launch", DateTime.Today.AddDays(23).AddHours(17), "Work", "Atelier House", 65),
+        new("Friendsgiving Dinner", DateTime.Today.AddDays(-12).AddHours(18), "Gathering", "Jordan's place", 12)
+    ];
+
+    private static readonly string[] EventFilters = ["All events", "Upcoming", "Past"];
+    private static readonly string[] EventTypes = ["Gathering", "Birthday", "Wedding", "Work"];
+    private string selectedFilter = EventFilters[0];
+    private string searchTerm = string.Empty;
+    private bool showCreateModal;
+    private string draftTitle = string.Empty;
+    private DateTime draftDate = DateTime.Today.AddDays(30);
+    private string draftType = EventTypes[0];
+    private string draftLocation = string.Empty;
+    private int draftGuests = 10;
+    private string? toastMessage;
+
+    private int UpcomingCount => events.Count(item => item.Date.Date >= DateTime.Today);
+    private int GuestCount => events.Where(item => item.Date.Date >= DateTime.Today).Sum(item => item.Guests);
+    private int ThisWeekCount => events.Count(item => item.Date.Date >= DateTime.Today && item.Date.Date < DateTime.Today.AddDays(7));
+    private string NextEventName => events.Where(item => item.Date.Date >= DateTime.Today).MinBy(item => item.Date)?.Title ?? "No events scheduled";
+    private string NextEventLabel => events.Where(item => item.Date.Date >= DateTime.Today).MinBy(item => item.Date)?.Date.ToString("MMM d") ?? "—";
+    private string WeekRange => $"{DateTime.Today.ToString("MMM d")} – {DateTime.Today.AddDays(6).ToString("MMM d")}";
+
+    private IEnumerable<EventItem> VisibleEvents
+    {
+        get
+        {
+            var filtered = events.AsEnumerable();
+            if (selectedFilter == "Upcoming")
+            {
+                filtered = filtered.Where(item => item.Date.Date >= DateTime.Today);
+            }
+            else if (selectedFilter == "Past")
+            {
+                filtered = filtered.Where(item => item.Date.Date < DateTime.Today);
+            }
+
+            if (!string.IsNullOrWhiteSpace(searchTerm))
+            {
+                filtered = filtered.Where(item =>
+                    item.Title.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ||
+                    item.Type.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ||
+                    item.Location.Contains(searchTerm, StringComparison.OrdinalIgnoreCase));
+            }
+
+            return filtered.OrderBy(item => item.Date);
+        }
+    }
+
+    private IEnumerable<WeekDay> WeekDays => Enumerable.Range(0, 7).Select(offset =>
+    {
+        var date = DateTime.Today.AddDays(offset);
+        return new WeekDay(date, events.Any(item => item.Date.Date == date.Date));
+    });
+
+    private void OpenCreateModal()
+    {
+        draftTitle = string.Empty;
+        draftDate = DateTime.Today.AddDays(30);
+        draftType = EventTypes[0];
+        draftLocation = string.Empty;
+        draftGuests = 10;
+        showCreateModal = true;
+    }
+
+    private void CloseCreateModal() => showCreateModal = false;
+
+    private void CreateEvent()
+    {
+        events.Add(new EventItem(draftTitle.Trim(), draftDate.Date.AddHours(12), draftType, draftLocation.Trim(), draftGuests));
+        showCreateModal = false;
+        selectedFilter = "All events";
+        searchTerm = string.Empty;
+        toastMessage = $"“{draftTitle.Trim()}” is on your calendar.";
+    }
+
+    private static string GetTypeClass(string type) => type switch
+    {
+        "Wedding" => "event-type--wedding",
+        "Birthday" => "event-type--birthday",
+        "Work" => "event-type--work",
+        _ => "event-type--gathering"
+    };
+
+    private sealed record EventItem(string Title, DateTime Date, string Type, string Location, int Guests);
+    private sealed record WeekDay(DateTime Date, bool HasEvent);
+}

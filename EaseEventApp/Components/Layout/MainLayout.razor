@@ -1,0 +1,37 @@
+﻿@inherits LayoutComponentBase
+
+<div class="app-shell">
+    <aside class="sidebar">
+        <NavMenu />
+    </aside>
+
+    <main class="main-content">
+        <header class="top-row">
+            <div class="workspace-label">
+                <span class="workspace-label__dot"></span>
+                Personal workspace
+            </div>
+            <div class="top-actions">
+                <button class="icon-button notification-button" aria-label="Notifications">
+                    <span aria-hidden="true">♧</span>
+                    <span class="notification-dot"></span>
+                </button>
+                <div class="profile-chip">
+                    <span class="profile-avatar">JD</span>
+                    <span class="profile-name">Jordan Davis</span>
+                    <span class="profile-chevron" aria-hidden="true">⌄</span>
+                </div>
+            </div>
+        </header>
+
+        <article class="content">
+            @Body
+        </article>
+    </main>
+</div>
+
+<div id="blazor-error-ui" data-nosnippet>
+    Something went wrong.
+    <a href="." class="reload">Reload</a>
+    <span class="dismiss">×</span>
+</div>
