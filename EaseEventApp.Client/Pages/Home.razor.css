@@ -1050,6 +1050,296 @@
     font-size: 17px;
 }
 
+/* Keep small supporting labels readable against their light surfaces. */
+.eyebrow,
+.page-subtitle,
+.stat-card__top,
+.stat-card__note,
+.filter-tab,
+.search-box,
+.search-box input::placeholder,
+.event-date__month,
+.event-row__meta,
+.guest-count,
+.guest-count__label,
+.event-status,
+.event-status--past,
+.empty-state p,
+.week-label,
+.guest-total,
+.week-day__name,
+.calendar-note,
+.guest-summary strong,
+.guest-summary p,
+.inspiration-strip strong,
+.inspiration-strip > div span,
+.inspiration-strip a,
+.dashboard-footer,
+.create-modal__heading p:last-child,
+.event-form label,
+.secondary-button {
+    color: #59635d;
+}
+
+.event-type--wedding {
+    color: #60476b;
+}
+
+.event-type--birthday {
+    color: #754a24;
+}
+
+.event-type--work {
+    color: #385a78;
+}
+
+.event-type--gathering {
+    color: #365c3b;
+}
+
+.stat-card__positive {
+    color: #356548;
+}
+
+.event-row__details h3,
+.event-date__day,
+.stat-card__value,
+.page-heading h1,
+.section-heading h2 {
+    color: #252b27;
+}
+
+.search-box input,
+.event-form input,
+.event-form select {
+    font-size: 14px;
+}
+
+.event-form input:focus-visible,
+.event-form select:focus-visible {
+    outline: 3px solid #245e3d;
+    outline-offset: 2px;
+}
+
+.search-box input {
+    min-height: 40px;
+}
+
+.event-form input,
+.event-form select {
+    min-height: 44px;
+}
+
+.page-subtitle,
+.stat-card__top,
+.stat-card__note,
+.event-row__meta,
+.guest-count,
+.empty-state p,
+.calendar-note,
+.guest-summary strong,
+.guest-summary p,
+.inspiration-strip strong,
+.inspiration-strip > div span,
+.create-modal__heading p:last-child,
+.event-form label {
+    font-size: 12px;
+}
+
+.eyebrow,
+.week-label,
+.guest-total,
+.week-day__name,
+.event-date__month,
+.event-status,
+.event-type,
+.guest-count__label,
+.dashboard-footer {
+    font-size: 11px;
+}
+
+.primary-button,
+.secondary-button,
+.text-button,
+.subtle-link,
+.filter-tab {
+    min-height: 42px;
+    font-size: 12px;
+}
+
+.more-button,
+.modal-close,
+.toast-message button {
+    min-width: 40px;
+    min-height: 40px;
+}
+
+.event-row {
+    gap: 12px;
+}
+
+.event-row__details {
+    min-width: 0;
+}
+
+.event-row__details h3,
+.event-row__meta {
+    white-space: normal;
+}
+
+.event-type {
+    white-space: nowrap;
+}
+
+.event-status {
+    min-width: 82px;
+}
+
+.week-day__dot {
+    width: 6px;
+    height: 6px;
+}
+
+.week-day__dot[aria-label] {
+    overflow: hidden;
+}
+
+.toast-message {
+    max-width: calc(100vw - 32px);
+}
+
+@media (max-width: 720px) {
+    .page-heading {
+        flex-wrap: wrap;
+    }
+
+    .page-heading > div {
+        min-width: 0;
+    }
+
+    .event-row {
+        display: grid;
+        grid-template-columns: 42px minmax(0, 1fr) auto;
+        align-items: center;
+    }
+
+    .event-date {
+        grid-column: 1;
+        grid-row: 1 / span 2;
+    }
+
+    .event-row__details {
+        grid-column: 2 / 4;
+    }
+
+    .event-type {
+        grid-column: 2;
+        margin-left: 0;
+        justify-self: start;
+    }
+
+    .guest-count {
+        grid-column: 3;
+        min-width: 0;
+        justify-self: end;
+    }
+
+    .event-status {
+        grid-column: 2;
+        min-width: 0;
+    }
+
+    .more-button {
+        grid-column: 3;
+        grid-row: 3;
+        justify-self: end;
+    }
+}
+
+@media (max-width: 520px) {
+    .page-heading {
+        flex-direction: column;
+    }
+
+    .page-heading > .primary-button {
+        min-height: 44px;
+        padding: 0 14px;
+        font-size: 12px;
+    }
+
+    .page-heading h1 {
+        font-size: clamp(22px, 7vw, 28px);
+    }
+
+    .welcome-banner {
+        padding: 22px 18px;
+    }
+
+    .banner-art {
+        opacity: 0.25;
+    }
+
+    .stats-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .stat-card:last-child {
+        grid-column: 1 / -1;
+    }
+
+    .filter-tabs {
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    .filter-tab {
+        flex: 1;
+        padding: 0 6px;
+        white-space: nowrap;
+    }
+
+    .search-box {
+        height: 44px;
+    }
+
+    .event-row__meta {
+        max-width: none;
+    }
+
+    .form-row {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .form-actions {
+        flex-wrap: wrap;
+    }
+
+    .form-actions > button {
+        flex: 1;
+    }
+
+    .toast-message {
+        right: 12px;
+        bottom: calc(78px + env(safe-area-inset-bottom));
+        left: 12px;
+    }
+}
+
+@media (max-width: 360px) {
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .stat-card:last-child {
+        grid-column: auto;
+    }
+
+    .event-status {
+        font-size: 10px;
+    }
+}
+
 @media (max-width: 980px) {
     .event-row {
         gap: 9px;
@@ -1261,5 +1551,86 @@
     .form-row {
         flex-direction: column;
         gap: 15px;
+    }
+}
+
+@media (max-width: 720px) {
+    .event-row {
+        flex-wrap: nowrap;
+        gap: 12px;
+    }
+
+    .event-row__details {
+        flex-basis: auto;
+    }
+
+    .event-type {
+        margin-left: 0;
+    }
+
+    .event-status {
+        min-width: 0;
+        font-size: 11px;
+    }
+}
+
+@media (max-width: 520px) {
+    .page-heading > .primary-button {
+        min-height: 44px;
+        gap: 8px;
+        padding: 0 14px;
+        font-size: 12px;
+    }
+
+    .page-heading h1 {
+        font-size: clamp(22px, 7vw, 28px);
+    }
+
+    .welcome-banner {
+        padding: 22px 18px;
+    }
+
+    .banner-art {
+        opacity: 0.25;
+    }
+
+    .stats-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .event-type {
+        margin-left: 0;
+    }
+
+    .guest-count {
+        font-size: 12px;
+    }
+
+    .event-status {
+        min-width: 0;
+        font-size: 11px;
+    }
+
+    .more-button {
+        margin-left: 0;
+    }
+
+    .form-row {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .form-actions {
+        flex-wrap: wrap;
+    }
+
+    .form-actions > button {
+        flex: 1;
+    }
+}
+
+@media (max-width: 360px) {
+    .stats-grid {
+        grid-template-columns: 1fr;
     }
 }
